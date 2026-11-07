@@ -1,7 +1,10 @@
 package logica;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Cita {
+public class Cita implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private int id;
     private LocalDate fecha;
     private int hora;
