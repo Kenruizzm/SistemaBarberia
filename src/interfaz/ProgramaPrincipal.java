@@ -31,3 +31,17 @@ public class VentanaPrincipal extends JFrame {
  
         add(pestanas);
     }
+ // Panel temporal para las secciones que todavía no están hechas
+    private JPanel crearPanelPendiente(String texto) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JLabel(texto + " (pendiente)", SwingConstants.CENTER), BorderLayout.CENTER);
+        return panel;
+    }
+ 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            Controladora controladora = new Controladora();
+            new VentanaPrincipal(controladora).setVisible(true);
+        });
+    }
+}
