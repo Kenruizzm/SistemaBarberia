@@ -1,7 +1,8 @@
 package logica;
+
 import java.io.Serializable;
-import java.util.ArrayList;    
-import java.util.List;  
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListaEspera implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -11,31 +12,42 @@ public class ListaEspera implements Serializable {
     public ListaEspera() {
         this.clientes = new ArrayList<>();
     }
+
     public List<Cliente> mostrarLista() {
         return new ArrayList<>(clientes);
     }
 
     public void agregarCliente(Cliente cliente) {
-          if (cliente != null && !contieneClienteEspera(cliente.getEmail())) {
-        clientes.add(cliente);
+        if (cliente != null && cliente.getEmail() != null
+                && !cliente.getEmail().trim().isEmpty()
+                && !contieneClienteEspera(cliente.getEmail())) {
+            clientes.add(cliente);
         }
-        
     }
 
     public boolean borrarClienteEspera(String email) {
-        return clientes.removeIf(c -> c.getEmail().equalsIgnoreCase(email)); 
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+
+        return clientes.removeIf(c -> email.equalsIgnoreCase(c.getEmail()));
     }
 
-    public Cliente buscarClienteEspera (String email) {
+    public Cliente buscarClienteEspera(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return null;
+        }
+
         for (Cliente c : clientes) {
-            if (c.getEmail().equalsIgnoreCase(email)) {
+            if (email.equalsIgnoreCase(c.getEmail())) {
                 return c;
             }
         }
-        return null; 
-    }
-    public boolean contieneClienteEspera (String email) {
-        return buscarClienteEspera(email) != null;
+
+        return null;
     }
 
+    public boolean contieneClienteEspera(String email) {
+        return buscarClienteEspera(email) != null;
+    }
 }

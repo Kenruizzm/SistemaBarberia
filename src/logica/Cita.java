@@ -1,4 +1,5 @@
 package logica;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -16,7 +17,7 @@ public class Cita implements Serializable {
         this.id = id;
         this.fecha = fecha;
         this.hora = hora;
-        this.confirmada = false;
+        this.confirmada = confirmada;
         this.cliente = cliente;
         this.tipoServicio = tipoServicio;
     }
