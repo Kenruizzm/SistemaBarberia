@@ -91,11 +91,104 @@ public class PanelClientes extends JPanel {
         campos.add(btnModificar);
         campos.add(btnBorrar);
         campos.add(btnLimpiar);
- 
-// Se mete en NORTH para que los campos no se estiren a todo lo alto
+     
+ // Se mete en NORTH para que los campos no se estiren a todo lo alto
         JPanel contenedor = new JPanel(new BorderLayout());
         contenedor.setBorder(BorderFactory.createTitledBorder("Datos del cliente"));
         contenedor.add(campos, BorderLayout.NORTH);
         return contenedor;
     }
+ 
+// Acciones (casos de uso) ----------
+ 
+    private void crearCliente() {
+        try {
+            controladora.crearCliente(txtNombre.getText(), txtEmail.getText(), txtTelefono.getText());
+            actualizarTabla();
+            limpiarFormulario();
+            mostrarMensaje("Cliente creado correctamente.");
+        } catch (Exception ex) {
+            mostrarError(ex.getMessage());
+        }
+    }
+ 
+    private void modificarCliente() {
+        if (emailSeleccionado == null) {
+            mostrarError("Seleccione un cliente de la tabla.");
+            return;
+        }
+        try {
+            controladora.modificarCliente(emailSeleccionado, txtNombre.getText(),
+                    txtEmail.getText(), txtTelefono.getText());
+            actualizarTabla();
+            limpiarFormulario();
+            mostrarMensaje("Los datos fueron guardados correctamente.");
+        } catch (Exception ex) {
+            mostrarError(ex.getMessage());
+        }
+    }
+ 
+    private void borrarCliente() {
+        if (emailSeleccionado == null) {
+            mostrarError("Seleccione un cliente de la tabla.");
+            return;
+        }
+        int respuesta = JOptionPane.showConfirmDialog(this,
+                "¿Desea borrar al cliente " + emailSeleccionado + "?",
+                "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (respuesta != JOptionPane.YES_OPTION) {
+            return;
+        }
+        try {
+            controladora.borrarCliente(emailSeleccionado);
+            actualizarTabla();
+            limpiarFormulario();
+            mostrarMensaje("Cliente borrado.");
+        } catch (Exception ex) {
+            mostrarError(ex.getMessage());
+        }
+    }
+ 
+    private void cargarClienteSeleccionado() {
+        int fila = tabla.getSelectedRow();
+        if (fila == -1) {
+            emailSeleccionado = null;
+            return;
+        }
+        String email = (String) modeloTabla.getValueAt(fila, 1);
+        Cliente cliente = controladora.consultarCliente(email);
+        if (cliente != null) {
+            emailSeleccionado = cliente.getEmail();
+            txtNombre.setText(cliente.getNombre());
+            txtEmail.setText(cliente.getEmail());
+            txtTelefono.setText(cliente.getTelefono());
+        }
+    }
+ 
+// Utilidades -
+ 
+// Es pública para poder refrescarla desde otras secciones más adelante
+    public void actualizarTabla() {
+        modeloTabla.setRowCount(0);
+        for (Cliente c : controladora.listarClientes()) {
+            modeloTabla.addRow(new Object[]{c.getNombre(), c.getEmail(), c.getTelefono()});
+        }
+    }
+ 
+    private void limpiarFormulario() {
+        tabla.clearSelection();
+        emailSeleccionado = null;
+        txtNombre.setText("");
+        txtEmail.setText("");
+        txtTelefono.setText("");
+    }
+ 
+    private void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Información", JOptionPane.INFORMATION_MESSAGE);
+    }
+ 
+    private void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
  
