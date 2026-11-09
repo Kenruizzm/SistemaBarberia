@@ -634,36 +634,39 @@ public boolean estaDentroDelHorario(LocalDate fecha, int hora) {
 
 // guardar y cargar info
 
-// guardar en disco
-public void guardarDatos(String archivo) throws IOException {
+    // Nombre del archivo donde se guarda todo
+    public static final String ARCHIVO = "barberia.dat";
 
-    ObjectOutputStream salida = new ObjectOutputStream(
-            new FileOutputStream(archivo));
+    // guardar en disco
+    public void guardarDatos(String archivo) throws IOException {
+        try (ObjectOutputStream salida = new ObjectOutputStream(
+                new FileOutputStream(archivo))) {
+            salida.writeObject(this);
+        }
+    }
 
-    salida.writeObject(this);
+    // cargar de disco
+    public static Controladora cargarDatos(String archivo)
+            throws IOException, ClassNotFoundException {
+        try (ObjectInputStream entrada = new ObjectInputStream(
+                new FileInputStream(archivo))) {
+            return (Controladora) entrada.readObject();
+        }
+    }
 
-    salida.close();
-}
-
-// cargar de disco
-public static Controladora cargarDatos(String archivo)
-        throws IOException, ClassNotFoundException {
-
-    ObjectInputStream entrada = new ObjectInputStream(
-            new FileInputStream(archivo));
-
-    Controladora controladora =
-            (Controladora) entrada.readObject();
-
-    entrada.close();
-
-    return controladora;
-}
-
-
-
-}
-
+    // cargar al iniciar: si no hay archivo, empieza vacío
+    public static Controladora iniciar(String archivo) {
+        java.io.File f = new java.io.File(archivo);
+        if (!f.exists()) {
+            return new Controladora();
+        }
+        try {
+            return cargarDatos(archivo);
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("No se pudieron cargar los datos: " + e.getMessage());
+            return new Controladora();
+        }
+    }
 
 
 
