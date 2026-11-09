@@ -3,6 +3,8 @@ package interfaz;
 import control.Controladora;
 import java.awt.*;
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ProgramaPrincipal extends JFrame {
 
@@ -41,6 +43,32 @@ public class ProgramaPrincipal extends JFrame {
 
         add(crearMenuLateral(), BorderLayout.WEST);
         add(contenido, BorderLayout.CENTER);
+
+        // Guardar los datos al cerrar el programa
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                try {
+
+                    controladora.guardarDatos(Controladora.ARCHIVO);
+
+                    System.out.println(
+                            "Datos guardados correctamente.");
+
+                } catch (java.io.IOException ex) {
+
+                    JOptionPane.showMessageDialog(
+                            ProgramaPrincipal.this,
+                            "No se pudieron guardar los datos: "
+                            + ex.getMessage(),
+                            "Error al guardar",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        });
     }
 
     private void crearContenido() {
@@ -154,141 +182,135 @@ public class ProgramaPrincipal extends JFrame {
         }
     }
 
-private JPanel crearInicio() {
+    private JPanel crearInicio() {
 
-    JPanel p = new JPanel(new BorderLayout());
+        JPanel p = new JPanel(new BorderLayout());
 
-    p.setBackground(EstiloUI.FONDO);
+        p.setBackground(EstiloUI.FONDO);
 
-    p.setBorder(
-            BorderFactory.createEmptyBorder(50, 40, 40, 40));
+        p.setBorder(
+                BorderFactory.createEmptyBorder(50, 40, 40, 40));
 
+        JPanel centro = new JPanel();
+        centro.setOpaque(false);
+        centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
 
-    JPanel centro = new JPanel();
-    centro.setOpaque(false);
-    centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
+        JLabel titulo = new JLabel("SistemaBarberia");
+        titulo.setFont(new Font("SansSerif", Font.BOLD, 36));
+        titulo.setForeground(EstiloUI.VINO);
+        titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        JLabel bienvenida = new JLabel(
+                "¡Bienvenido a nuestro Sistema de Barberia!");
 
-    JLabel titulo = new JLabel("SistemaBarberia");
-    titulo.setFont(new Font("SansSerif", Font.BOLD, 36));
-    titulo.setForeground(EstiloUI.VINO);
-    titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bienvenida.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        bienvenida.setForeground(EstiloUI.SECUNDARIO);
+        bienvenida.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        JLabel descripcion = new JLabel(
+                "<html><div style='text-align:center;'>"
+                + "Qué tal viajero. Aquí podéis administrar las citas, "
+                + "clientes y servicios de tu barbería desde un solo lugar.<br>"
+                + "Mantén toda la información organizada de manera sencilla."
+                + "</div></html>",
+                SwingConstants.CENTER
+        );
 
-    JLabel bienvenida = new JLabel(
-            "¡Bienvenido a nuestro Sistema de Barberia!");
+        descripcion.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        descripcion.setForeground(EstiloUI.SECUNDARIO);
+        descripcion.setAlignmentX(Component.CENTER_ALIGNMENT);
+        descripcion.setHorizontalAlignment(SwingConstants.CENTER);
+        descripcion.setMaximumSize(new Dimension(700, 60));
 
-    bienvenida.setFont(new Font("SansSerif", Font.PLAIN, 16));
-    bienvenida.setForeground(EstiloUI.SECUNDARIO);
-    bienvenida.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel opciones = new JLabel("¿Qué deseas hacer hoy?");
+        opciones.setFont(new Font("SansSerif", Font.BOLD, 20));
+        opciones.setForeground(EstiloUI.TEXTO);
+        opciones.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        centro.add(Box.createVerticalGlue());
+        centro.add(titulo);
+        centro.add(Box.createVerticalStrut(12));
+        centro.add(bienvenida);
+        centro.add(Box.createVerticalStrut(15));
+        centro.add(descripcion);
+        centro.add(Box.createVerticalStrut(65));
+        centro.add(opciones);
+        centro.add(Box.createVerticalStrut(25));
 
-JLabel descripcion = new JLabel(
-        "<html><div style='text-align:center;'>"
-        + "Qué tal viajero. Aquí podéis administrar las citas, "
-        + "clientes y servicios de tu barbería desde un solo lugar.<br>"
-        + "Mantén toda la información organizada de manera sencilla."
-        + "</div></html>",
-        SwingConstants.CENTER
-);
+        centro.add(botonInicio("Clientes", "clientes"));
+        centro.add(Box.createVerticalStrut(15));
 
-descripcion.setFont(new Font("SansSerif", Font.PLAIN, 14));
-descripcion.setForeground(EstiloUI.SECUNDARIO);
-descripcion.setAlignmentX(Component.CENTER_ALIGNMENT);
-descripcion.setHorizontalAlignment(SwingConstants.CENTER);
-descripcion.setMaximumSize(new Dimension(700, 60));
+        centro.add(botonInicio("Citas", "citas"));
+        centro.add(Box.createVerticalStrut(15));
 
+        centro.add(botonInicio("Lista de espera", "lista"));
+        centro.add(Box.createVerticalStrut(15));
 
-    JLabel opciones = new JLabel("¿Qué deseas hacer hoy?");
-    opciones.setFont(new Font("SansSerif", Font.BOLD, 20));
-    opciones.setForeground(EstiloUI.TEXTO);
-    opciones.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centro.add(botonInicio("Administración", "admin"));
 
+        centro.add(Box.createVerticalGlue());
 
-    centro.add(Box.createVerticalGlue());
-    centro.add(titulo);
-    centro.add(Box.createVerticalStrut(12));
-    centro.add(bienvenida);
-    centro.add(Box.createVerticalStrut(15));
-    centro.add(descripcion);
-    centro.add(Box.createVerticalStrut(65));
-    centro.add(opciones);
-    centro.add(Box.createVerticalStrut(25));
+        p.add(centro, BorderLayout.CENTER);
 
+        return p;
+    }
 
-    centro.add(botonInicio("Clientes", "clientes"));
-    centro.add(Box.createVerticalStrut(15));
+    private JButton botonInicio(String texto, String destino) {
 
-    centro.add(botonInicio("Citas", "citas"));
-    centro.add(Box.createVerticalStrut(15));
+        JButton boton = new JButton(texto) {
 
-    centro.add(botonInicio("Lista de espera", "lista"));
-    centro.add(Box.createVerticalStrut(15));
+            @Override
+            protected void paintComponent(Graphics g) {
 
-    centro.add(botonInicio("Administración", "admin"));
+                Graphics2D g2 = (Graphics2D) g.create();
 
-    centro.add(Box.createVerticalGlue());
+                g2.setRenderingHint(
+                        RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
 
-    p.add(centro, BorderLayout.CENTER);
+                g2.setColor(getBackground());
 
-    return p;
-}
+                g2.fillRoundRect(
+                        0, 0, getWidth(), getHeight(), 25, 25);
 
-private JButton botonInicio(String texto, String destino) {
+                g2.dispose();
 
-    JButton boton = new JButton(texto) {
+                super.paintComponent(g);
+            }
 
-        @Override
-        protected void paintComponent(Graphics g) {
+            @Override
+            protected void paintBorder(Graphics g) {
 
-            Graphics2D g2 = (Graphics2D) g.create();
+            }
+        };
 
-            g2.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON);
+        boton.setText(texto);
+        boton.setFont(new Font("SansSerif", Font.BOLD, 14));
+        boton.setForeground(Color.WHITE);
+        boton.setBackground(EstiloUI.VINO);
 
-            g2.setColor(getBackground());
+        boton.setFocusPainted(false);
+        boton.setBorderPainted(false);
+        boton.setContentAreaFilled(false);
+        boton.setOpaque(false);
 
-            g2.fillRoundRect(
-                    0, 0, getWidth(), getHeight(), 25, 25);
+        boton.setCursor(
+                Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-            g2.dispose();
+        boton.setPreferredSize(new Dimension(260, 48));
+        boton.setMaximumSize(new Dimension(260, 48));
+        boton.setMinimumSize(new Dimension(260, 48));
 
-            super.paintComponent(g);
-        }
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        @Override
-        protected void paintBorder(Graphics g) {
+        boton.addActionListener(e -> {
+            tarjetas.show(contenido, destino);
+            refrescarDatos();
+        });
 
-        }
-    };
+        return boton;
+    }
 
-    boton.setText(texto);
-    boton.setFont(new Font("SansSerif", Font.BOLD, 14));
-    boton.setForeground(Color.WHITE);
-    boton.setBackground(EstiloUI.VINO);
-
-    boton.setFocusPainted(false);
-    boton.setBorderPainted(false);
-    boton.setContentAreaFilled(false);
-    boton.setOpaque(false);
-
-    boton.setCursor(
-            Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-    boton.setPreferredSize(new Dimension(260, 48));
-    boton.setMaximumSize(new Dimension(260, 48));
-    boton.setMinimumSize(new Dimension(260, 48));
-
-    boton.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-    boton.addActionListener(e -> {
-        tarjetas.show(contenido, destino);
-        refrescarDatos();
-    });
-
-    return boton;
-}
     private void refrescarDatos() {
 
         panelClientes.actualizarTabla();
@@ -304,8 +326,11 @@ private JButton botonInicio(String texto, String destino) {
 
         SwingUtilities.invokeLater(() -> {
 
-            Controladora controladora = new Controladora();
+            // Recuperar los datos guardados anteriormente
+            Controladora controladora =
+                    Controladora.iniciar(Controladora.ARCHIVO);
 
+            // Abrir el sistema con la información recuperada
             new ProgramaPrincipal(controladora).setVisible(true);
         });
     }
