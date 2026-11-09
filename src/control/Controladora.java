@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 
+
 public class Controladora implements java.io.Serializable {
 
     private List<Cliente> clientes;
@@ -23,6 +24,7 @@ public class Controladora implements java.io.Serializable {
     private List<HorarioDia> horarios;
     private ListaEspera listaEspera;
     private static final long serialVersionUID = 1L;
+    
 
     // Contadores para generar los ids automáticamente
     private int siguienteIdCita;
@@ -353,7 +355,7 @@ public boolean enviarCorreoConfirmacion(Cita cita) {
 
     /*
      * hay que configurar
-     * un servicio SMTP o 
+     * un servicio SMTP 
      * biblioteca de correo electrónico (Jakarta Mail.)
      */
 
@@ -363,7 +365,7 @@ public boolean enviarCorreoConfirmacion(Cita cita) {
 
 
 
-// ver calendario  REVISAR 
+// ver calendario 
 
 public List<Cita> verCalendarioCitas(
         LocalDate fechaInicio, String periodo) {
