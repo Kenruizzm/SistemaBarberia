@@ -1,5 +1,11 @@
 package control;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +14,6 @@ import logica.Cliente;
 import logica.HorarioDia;
 import logica.ListaEspera;
 import logica.TipoServicio;
-import java.time.DayOfWeek;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
-
 
 public class Controladora implements java.io.Serializable {
 
@@ -562,8 +561,6 @@ public boolean borrarClienteListaEspera(String email) {
     return listaEspera.borrarClienteEspera(email);
 }
 
-
-
 // horario ate
 
 // confi horario
@@ -626,12 +623,6 @@ public boolean estaDentroDelHorario(LocalDate fecha, int hora) {
             && hora < horario.getHoraCierre();
 }
 
-
-
-
-
-
-
 // guardar y cargar info
 
     // Nombre del archivo donde se guarda todo
@@ -669,4 +660,3 @@ public boolean estaDentroDelHorario(LocalDate fecha, int hora) {
     }
 
 }
-
