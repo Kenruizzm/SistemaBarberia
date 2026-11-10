@@ -1,5 +1,4 @@
 package interfaz;
-
 import control.Controladora;
 import java.awt.*;
 import javax.swing.*;
