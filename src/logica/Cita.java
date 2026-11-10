@@ -13,6 +13,10 @@ public class Cita implements Serializable {
     private Cliente cliente;
     private TipoServicio tipoServicio;
 
+    // Indica que ya se envió el correo de recordatorio
+    // (en archivos guardados antes de este cambio se carga como false)
+    private boolean notificada;
+
     public Cita(int id, LocalDate fecha, int hora, boolean confirmada, Cliente cliente, TipoServicio tipoServicio) {
         this.id = id;
         this.fecha = fecha;
@@ -60,5 +64,13 @@ public class Cita implements Serializable {
 
     public void confirmar() {
         this.confirmada = true;
+    }
+
+    public boolean isNotificada() {
+        return notificada;
+    }
+
+    public void setNotificada(boolean notificada) {
+        this.notificada = notificada;
     }
 }
